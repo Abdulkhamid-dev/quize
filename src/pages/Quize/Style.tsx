@@ -13,7 +13,7 @@ export const StyledQuize = styled.div`
   }
   .question_btn {
     border: 1px solid rgba(0, 0, 0, 0.23);
-    padding: ${convertPxToRem(5)} ${convertPxToRem(15)};
+    padding: ${convertPxToRem(10)} ${convertPxToRem(22)};
     cursor: pointer;
   }
   .card {
@@ -28,19 +28,40 @@ export const StyledQuize = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
     .card_header {
-      padding: 0.75rem 1.25rem;
+      padding: ${convertPxToRem(10)};
       margin-bottom: 0;
       background-color: rgba(0, 0, 0, 0.03);
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-      h5{
+      h5 {
         font-size: ${convertPxToRem(18)};
         font-weight: 600;
+      }
+    }
+    .card_body {
+      padding: ${convertPxToRem(20)};
+      .radio_block {
+        padding: ${convertPxToRem(8)} ${convertPxToRem(0)};
       }
     }
     .card_footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: ${convertPxToRem(10)};
+      margin-bottom: 0;
+      background-color: rgba(0, 0, 0, 0.03);
+      border-top: 1px solid rgba(0, 0, 0, 0.125);
+      button{
+        padding: ${convertPxToRem(8)} ${convertPxToRem(14)};
+        border: none;
+        outline: none;
+        border-radius: ${convertPxToRem(4)};
+        background-color: #217ff1;
+        color: #fff;
+        font-size: ${convertPxToRem(16)};
+        font-weight: 550;
+        cursor: pointer;
+      }
     }
   }
 `;

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { StyledQuize } from "./Style";
-import Swal from 'sweetalert2'
-import { storeCurrentQuestion, storeQuestion, finishTest, incrementScore } from "../../redux/questions/questionsSlice";
+import Swal from "sweetalert2";
+import {
+  storeCurrentQuestion,
+  storeQuestion,
+  finishTest,
+  incrementScore,
+} from "../../redux/questions/questionsSlice";
 
 function Quize() {
   const default_question = useAppSelector(
@@ -14,18 +19,17 @@ function Quize() {
   const userFinished = useAppSelector(
     (state) => state.question.userInfo.hasFinished
   );
-  
+
   const checkAnswers = () => {
-    const correctAnswers = userFinished ? default_question.correct_answer : ""
-    
-     setUserAnswer(correctAnswers);
-  }
+    const correctAnswers = userFinished ? default_question.correct_answer : "";
+
+    setUserAnswer(correctAnswers);
+  };
   const [options, setOptions] = useState<string[]>([]);
   const [userAnswer, setUserAnswer] = useState<string>();
   const isRadioSelcted = (value: string): boolean => userAnswer === value;
   const state = useAppSelector((state) => state.question.all_questions);
   const dispatch = useAppDispatch();
-  const current_question = default_question.question
 
   const getById = (id: number) => {
     let item = state.find((i) => i.id === id);
@@ -58,72 +62,75 @@ function Quize() {
 
   const shuffleArr = (arr: string[]) => {
     if (!arr.includes(default_question.correct_answer)) {
-      arr = Object.assign([], default_question.incorrect_answers)
-     arr.push(default_question.correct_answer)
+      arr = Object.assign([], default_question.incorrect_answers);
+      arr.push(default_question.correct_answer);
     }
-    
+
     function shuffle() {
-  arr.sort(() => Math.random() - 0.5);
-   setOptions(arr);
-}
-shuffle();    
+      arr.sort(() => Math.random() - 0.5);
+      setOptions(arr);
+    }
+    shuffle();
   };
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setUserAnswer(e.target.value);
-  }
+  };
 
   const handleSubmit = () => {
     if (!userAnswer) {
-alert("select answer")
-} else {
-    if (userAnswer === default_question.correct_answer) {
-      const newArr = state.map(obj => {
-  if (obj.id === default_question.id) {
-    return {...obj, isAnswered: 'did'};
-  }
- nextQuestion()
-  return obj;
-});
- dispatch(storeQuestion(newArr));
- dispatch(incrementScore())
-      setUserAnswer("");
-  } else {
-        const newArr = state.map(obj => {
-  if (obj.id === default_question.id) {
-    
-    return {...obj, isAnswered: 'didnt'};
-  }
-   nextQuestion()
-  return obj;
-});
- dispatch(storeQuestion(newArr));
-      setUserAnswer("");
-      
-  }
-}
-}
-  
+      alert("select answer");
+    } else {
+      if (userAnswer === default_question.correct_answer) {
+        const newArr = state.map((obj) => {
+          if (obj.id === default_question.id) {
+            return { ...obj, isAnswered: "did" };
+          }
+          nextQuestion();
+          return obj;
+        });
+        dispatch(storeQuestion(newArr));
+        dispatch(incrementScore());
+        setUserAnswer("");
+      } else {
+        const newArr = state.map((obj) => {
+          if (obj.id === default_question.id) {
+            return { ...obj, isAnswered: "didnt" };
+          }
+          nextQuestion();
+          return obj;
+        });
+        dispatch(storeQuestion(newArr));
+        setUserAnswer("");
+      }
+    }
+  };
 
-const handleFinish = () => {
-     const newArr = state.map(obj => {
-  if (obj.isAnswered === "") {
-    return {...obj, isAnswered: "didnt"};
-  } if (obj.isAnswered === "did") {
-   dispatch(incrementScore())
-  }
-  Swal.fire(`Your Score is ${correct_questions}/${state.length}`)
-  return obj;
-});
-dispatch(storeQuestion(newArr));
-dispatch(finishTest())
-}
-useEffect(() => {
-  checkAnswers()
-} , [userFinished])
+  const handleFinish = () => {
+    const newArr = state.map((obj) => {
+      if (obj.isAnswered === "") {
+        return { ...obj, isAnswered: "didnt" };
+      }
+      if (obj.isAnswered === "did") {
+        dispatch(incrementScore());
+      }
+      Swal.fire(`Your Score is ${correct_questions}/${state.length}`);
+      return obj;
+    });
+    dispatch(storeQuestion(newArr));
+    dispatch(finishTest());
+  };
+
+  
+  useEffect(() => {
+    checkAnswers();
+  }, [userFinished]);
+
+
+
   useEffect(() => {
     shuffleArr(default_question.incorrect_answers);
-    checkAnswers()
+    checkAnswers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [default_question]);
   return (
@@ -131,10 +138,28 @@ useEffect(() => {
       <div className="btn_wrapper">
         {state.map((item, index) => {
           return (
-            <button className="question_btn" onClick={() => getById(item.id)}   style={{
-          "backgroundColor": item.isAnswered === "did" ? 'green' : item.isAnswered === "didnt" ? 'red' : 'transparent',
-          "color": item.isAnswered === "did" ? 'white' : item.isAnswered === "didnt" ? 'white' : 'black',
-        }}>
+            <button
+              className="question_btn"
+              onClick={() => getById(item.id)}
+              style={{
+                backgroundColor:
+                  item.isAnswered === "did"
+                    ? "green"
+                    : item.isAnswered === "didnt"
+                    ? "red"
+                    : item.id === default_question.id
+                    ? "blue"
+                    : "transparent",
+                color:
+                  item.isAnswered === "did"
+                    ? "white"
+                    : item.isAnswered === "didnt"
+                    ? "white"
+                    : item.id === default_question.id
+                    ? "white"
+                    : "black",
+              }}
+            >
               {index + 1}
             </button>
           );
@@ -150,8 +175,15 @@ useEffect(() => {
           <div>
             {options.map((item, index) => {
               return (
-                <div>
-                  <input type="radio" id={item} name="drone" value={item} checked={isRadioSelcted(item)} onChange={handleRadioChange}/>
+                <div className="radio_block">
+                  <input
+                    type="radio"
+                    id={item}
+                    name="drone"
+                    value={item}
+                    checked={isRadioSelcted(item)}
+                    onChange={handleRadioChange}
+                  />
                   <label htmlFor={item}>{item}</label>
                 </div>
               );
@@ -163,9 +195,17 @@ useEffect(() => {
             <button onClick={prevQuestion}>Prev</button>
           </div>
           <div>
-            {
-              default_question.isAnswered === 'did' ?  <button onClick={handleSubmit} disabled>Submit</button> : default_question.isAnswered === 'didnt' ? <button onClick={handleSubmit} disabled>Submit</button> : <button onClick={handleSubmit}>Submit</button>
-            }
+            {default_question.isAnswered === "did" ? (
+              <button onClick={handleSubmit} disabled>
+                Submit
+              </button>
+            ) : default_question.isAnswered === "didnt" ? (
+              <button onClick={handleSubmit} disabled>
+                Submit
+              </button>
+            ) : (
+              <button onClick={handleSubmit}>Submit</button>
+            )}
           </div>
           <div>
             <button onClick={handleFinish}>Finish</button>
@@ -175,7 +215,6 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      {JSON.stringify(default_question)}
     </StyledQuize>
   );
 }
