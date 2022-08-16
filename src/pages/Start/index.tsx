@@ -24,6 +24,8 @@ function Start() {
   const [questions, setQuestions] = useState<any[]>([]);
   let navigate = useNavigate();
 
+  
+
   const handleInput = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormValues((prevState) => ({
@@ -39,11 +41,10 @@ function Start() {
       const res = await axios.get(
         `https://opentdb.com/api.php?amount=${formValues.count}&category=${formValues.category}&difficulty=easy&type=multiple`
       );
-      console.log(res);
       setQuestions(res.data.results);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      alert(error);
       setLoading(false);
     }
   };
@@ -51,14 +52,16 @@ function Start() {
   const generateId = () => {
     questions.forEach((item, index) => {
       item.id = index + 1;
+      item.isAnswered = "";
     });
-    console.log(questions);
   };
 
-  console.log(store);
   if (store.question.all_questions.length > 0) {
     navigate("/quize");
   }
+  useEffect(() => {
+    dispatch(removeQuestions())
+  },[])
   useEffect(() => {
     generateId();
     dispatch(storeQuestion(questions));
