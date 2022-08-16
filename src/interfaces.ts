@@ -17,12 +17,13 @@ export interface IQuestion {
   question: string;
   correct_answer: string;
   incorrect_answers: [string];
+  isAnswered: string;
 }
 
 export interface IUserScore {
   default_question: IQuestion;
   correct_answers: number;
-  incorrect_answers: number;
+  hasFinished: boolean;
 }
 export interface IAllQuestions {
   all_questions: IQuestion[];

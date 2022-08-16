@@ -7,7 +7,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
-import "antd/dist/antd.css";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
