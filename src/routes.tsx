@@ -9,10 +9,12 @@ export const PublicRoutes: IRoute[] = [
     path: "/",
     component: <Start />,
     key: "start",
+    isProtected: false,
   },
   {
     path: "/quize",
     component: <Quize />,
     key: "quize",
+    isProtected: true
   },
 ];

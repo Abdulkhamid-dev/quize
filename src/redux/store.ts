@@ -5,6 +5,7 @@ import {
   combineReducers,
 } from "@reduxjs/toolkit";
 import questionReducer from "./questions/questionsSlice";
+import logger from "redux-logger";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
@@ -23,11 +24,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-               immutableCheck: false,
-               serializableCheck: false,
-          }),
-  devTools: true,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }).concat(logger),
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 const persistor = persistStore(store);
