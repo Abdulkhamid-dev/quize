@@ -38,7 +38,7 @@ function App() {
                     );
                   }
                 )}
-                  <Route path="*" element={<Start />} />
+            <Route path="*" element={<Start />} />
           </Routes>
         </Suspense>
       </Container>

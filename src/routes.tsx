@@ -15,6 +15,6 @@ export const PublicRoutes: IRoute[] = [
     path: "/quize",
     component: <Quize />,
     key: "quize",
-    isProtected: true
+    isProtected: true,
   },
 ];
